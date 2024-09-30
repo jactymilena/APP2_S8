@@ -12,9 +12,9 @@ function AddComments() {
                 type: "POST",
                 data: { comment: $("#NewComment").val() },
                 success: function (status) {
-                    if (status != "success") {
-                        alert(status);
-                    }
+                    //if (status != "success") {
+                    //    //alert(status);
+                    //}
 
                     $("#NewComment").hide();
                     $("#NewCommentsBtn").val("Nouveau commentaire");
