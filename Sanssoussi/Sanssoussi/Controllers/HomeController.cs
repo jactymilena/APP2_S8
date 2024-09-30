@@ -20,7 +20,7 @@ namespace Sanssoussi.Controllers
 
         private readonly ILogger<HomeController> _logger;
 
-        private readonly UserManager<SanssoussiUser> _userManager;
+        private readonly UserManager<SanssoussiUser> _userManager; // Gestion de l'authentification, cookie?
 
         public HomeController(ILogger<HomeController> logger, UserManager<SanssoussiUser> userManager, IConfiguration configuration)
         {
@@ -29,18 +29,20 @@ namespace Sanssoussi.Controllers
             this._dbConnection = new SqliteConnection(configuration.GetConnectionString("SanssoussiContextConnection"));
         }
 
+        // Affiche la page d'acceuil du site
         public IActionResult Index()
         {
             this.ViewData["Message"] = "Parce que marcher devrait se faire SansSoussi";
             return this.View();
         }
 
+        // Affiche les commentaires du user connecté
         [HttpGet]
         public async Task<IActionResult> Comments()
         {
             var comments = new List<string>();
 
-            var user = await this._userManager.GetUserAsync(this.User);
+            var user = await this._userManager.GetUserAsync(this.User); // Cookie pour aller chercher le user id
             if (user == null)
             {
                 return this.View(comments);
@@ -63,16 +65,17 @@ namespace Sanssoussi.Controllers
             return this.View(comments);
         }
 
+        // Permet de sauvegarder un commentaire
         [HttpPost]
         public async Task<IActionResult> Comments(string comment)
         {
-            var user = await this._userManager.GetUserAsync(this.User);
+            var user = await this._userManager.GetUserAsync(this.User); // Cookie
             if (user == null)
             {
                 throw new InvalidOperationException("Vous devez vous connecter");
             }
 
-            comment = Utils.SanitizeInput(comment);
+            comment = Utils.SanitizeInput(comment); // sécurité pour éviter les injections
             var query = "insert into Comments (UserId, CommentId, Comment) Values (@userId, @guid, @comment)";
 
             var cmd = new SqliteCommand(query, this._dbConnection);
@@ -89,7 +92,7 @@ namespace Sanssoussi.Controllers
         {
             var searchResults = new List<string>();
 
-            var user = await this._userManager.GetUserAsync(this.User);
+            var user = await this._userManager.GetUserAsync(this.User); // Cookie
             if (user == null || string.IsNullOrEmpty(searchData))
             {
                 return this.View(searchResults);
@@ -123,6 +126,9 @@ namespace Sanssoussi.Controllers
             return this.View();
         }
 
+        // Affiche une page avec un identifiant unique de la requête qui a échoué
+        // Mauvaise configuration de sécurité?
+        // Est-ce qu'on donne trop d'information?
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -141,8 +147,8 @@ namespace Sanssoussi.Controllers
         {
             var searchResults = new List<string>();
 
-            var user = await this._userManager.GetUserAsync(this.User);
-            var roles = await this._userManager.GetRolesAsync(user);
+            var user = await this._userManager.GetUserAsync(this.User); // Cookie
+            var roles = await this._userManager.GetRolesAsync(user); // Cookie
             if (roles.Contains("admin"))
             {
                 var cmd = new SqliteCommand("select Email from AspNetUsers", this._dbConnection);

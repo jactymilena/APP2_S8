@@ -18,8 +18,8 @@ namespace Sanssoussi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddControllersWithViews();
+            services.AddRazorPages();               // Classes PageModel
+            services.AddControllersWithViews();     // Structure Model-Vue-Controller
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,7 +38,7 @@ namespace Sanssoussi
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication();
+            app.UseAuthentication(); // Cookie d'authentification pour maintenir la connection
 
             app.UseAuthorization();
 
