@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using static Microsoft.AspNetCore.Http.StatusCodes;
+using System.Net;
+using System;
 
 namespace Sanssoussi
 {
@@ -20,6 +23,19 @@ namespace Sanssoussi
         {
             services.AddRazorPages();               // Classes PageModel
             services.AddControllersWithViews();     // Structure Model-Vue-Controller
+
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = Status307TemporaryRedirect;
+                options.HttpsPort = 5001;
+            });
+
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,7 +49,10 @@ namespace Sanssoussi
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection(); //Permet de rediriger les requêtes HTTP vers HTTPS
 
             app.UseStaticFiles();
 
