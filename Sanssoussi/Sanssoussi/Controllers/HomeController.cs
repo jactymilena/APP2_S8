@@ -70,10 +70,12 @@ namespace Sanssoussi.Controllers
             {
                 throw new InvalidOperationException("Vous devez vous connecter");
             }
+            var query = "insert into Comments (UserId, CommentId, Comment) Values (@userId, @guid, @comment)";
 
-            var cmd = new SqliteCommand(
-                $"insert into Comments (UserId, CommentId, Comment) Values ('{user.Id}','{Guid.NewGuid()}','" + comment + "')",
-                this._dbConnection);
+            var cmd = new SqliteCommand(query, this._dbConnection);
+            cmd.Parameters.AddWithValue("@userId", user.Id);
+            cmd.Parameters.AddWithValue("@guid", Guid.NewGuid().ToString());
+            cmd.Parameters.AddWithValue("@comment", comment);
             this._dbConnection.Open();
             await cmd.ExecuteNonQueryAsync();
 
