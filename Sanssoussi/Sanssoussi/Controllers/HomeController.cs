@@ -47,7 +47,9 @@ namespace Sanssoussi.Controllers
                 return this.View(comments);
             }
 
-            var cmd = new SqliteCommand($"Select Comment from Comments where UserId ='{user.Id}'", this._dbConnection);
+            var query = "Select Comment from Comments where UserId =@userId";
+            var cmd = new SqliteCommand(query, this._dbConnection);
+            cmd.Parameters.AddWithValue("@userId", user.Id);
             this._dbConnection.Open();
             var rd = await cmd.ExecuteReaderAsync();
 
@@ -92,7 +94,11 @@ namespace Sanssoussi.Controllers
                 return this.View(searchResults);
             }
 
-            var cmd = new SqliteCommand($"Select Comment from Comments where UserId = '{user.Id}' and Comment like '%{searchData}%'", this._dbConnection);
+            var query = "Select Comment from Comments where UserId=@userId and Comment like @searchData";
+            var cmd = new SqliteCommand(query, this._dbConnection);
+            cmd.Parameters.AddWithValue("@userId", user.Id);
+            cmd.Parameters.AddWithValue("@searchData", "%" + searchData + "%");
+
             this._dbConnection.Open();
             var rd = await cmd.ExecuteReaderAsync();
             while (rd.Read())
@@ -102,7 +108,7 @@ namespace Sanssoussi.Controllers
 
             rd.Close();
             this._dbConnection.Close();
-
+          
             return this.View(searchResults);
         }
 
