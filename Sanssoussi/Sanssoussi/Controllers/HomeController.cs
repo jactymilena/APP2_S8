@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
@@ -72,6 +71,8 @@ namespace Sanssoussi.Controllers
             {
                 throw new InvalidOperationException("Vous devez vous connecter");
             }
+
+            comment = Utils.SanitizeInput(comment);
             var query = "insert into Comments (UserId, CommentId, Comment) Values (@userId, @guid, @comment)";
 
             var cmd = new SqliteCommand(query, this._dbConnection);
