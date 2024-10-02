@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 using System.Net;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Sanssoussi
 {
@@ -37,12 +38,34 @@ namespace Sanssoussi
                 options.MaxAge = TimeSpan.FromDays(60);
             });
 
+
             services.AddCors();
+            
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Strict; // SameSite = Strict
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //app.Use(async (context, next) =>
+            //{
+            //    // Supprimer tous les cookies
+            //    foreach (var cookie in context.Request.Cookies.Keys)
+            //    {
+            //        context.Response.Cookies.Delete(cookie);
+            //    }
+
+            //    await next();
+            //});
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -54,7 +77,7 @@ namespace Sanssoussi
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection(); //Permet de rediriger les requêtes HTTP vers HTTPS
+            app.UseHttpsRedirection(); //Permet de rediriger les requï¿½tes HTTP vers HTTPS
 
             app.UseStaticFiles();
 
