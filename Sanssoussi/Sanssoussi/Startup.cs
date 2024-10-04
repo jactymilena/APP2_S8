@@ -65,9 +65,8 @@ namespace Sanssoussi
 
             services.Configure<IdentityOptions>(options =>
             {
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(15);
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 3;
-                options.Lockout.AllowedForNewUsers = true;
             });
         }
 

@@ -69,7 +69,7 @@ namespace Sanssoussi.Controllers
         [HttpPost]
         public async Task<IActionResult> Comments(string comment)
         {
-            var user = await this._userManager.GetUserAsync(this.User)
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 throw new InvalidOperationException("Vous devez vous connecter");
