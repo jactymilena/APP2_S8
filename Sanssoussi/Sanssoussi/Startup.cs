@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Sanssoussi
@@ -47,11 +48,44 @@ namespace Sanssoussi
                 options.IncludeSubDomains = true;
                 options.MaxAge = TimeSpan.FromDays(60);
             });
+
+            services.AddCors();
+            
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Strict; 
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.AllowedForNewUsers = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //app.Use(async (context, next) =>
+            //{
+            //    // Supprimer tous les cookies
+            //    foreach (var cookie in context.Request.Cookies.Keys)
+            //    {
+            //        context.Response.Cookies.Delete(cookie);
+            //    }
+
+            //    await next();
+            //});
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
