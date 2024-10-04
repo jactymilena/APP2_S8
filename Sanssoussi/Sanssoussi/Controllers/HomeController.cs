@@ -20,7 +20,7 @@ namespace Sanssoussi.Controllers
 
         private readonly ILogger<HomeController> _logger;
 
-        private readonly UserManager<SanssoussiUser> _userManager; // Gestion de l'authentification, cookie?
+        private readonly UserManager<SanssoussiUser> _userManager;
 
         public HomeController(ILogger<HomeController> logger, UserManager<SanssoussiUser> userManager, IConfiguration configuration)
         {
@@ -42,7 +42,7 @@ namespace Sanssoussi.Controllers
         {
             var comments = new List<string>();
 
-            var user = await this._userManager.GetUserAsync(this.User); // Cookie pour aller chercher le user id
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null)
             {
                 return this.View(comments);
@@ -69,7 +69,7 @@ namespace Sanssoussi.Controllers
         [HttpPost]
         public async Task<IActionResult> Comments(string comment)
         {
-            var user = await this._userManager.GetUserAsync(this.User); // Cookie
+            var user = await this._userManager.GetUserAsync(this.User)
             if (user == null)
             {
                 throw new InvalidOperationException("Vous devez vous connecter");
@@ -92,7 +92,7 @@ namespace Sanssoussi.Controllers
         {
             var searchResults = new List<string>();
 
-            var user = await this._userManager.GetUserAsync(this.User); // Cookie
+            var user = await this._userManager.GetUserAsync(this.User);
             if (user == null || string.IsNullOrEmpty(searchData))
             {
                 return this.View(searchResults);
@@ -147,8 +147,8 @@ namespace Sanssoussi.Controllers
         {
             var searchResults = new List<string>();
 
-            var user = await this._userManager.GetUserAsync(this.User); // Cookie
-            var roles = await this._userManager.GetRolesAsync(user); // Cookie
+            var user = await this._userManager.GetUserAsync(this.User);
+            var roles = await this._userManager.GetRolesAsync(user);
             if (roles.Contains("admin"))
             {
                 var cmd = new SqliteCommand("select Email from AspNetUsers", this._dbConnection);

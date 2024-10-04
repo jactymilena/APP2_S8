@@ -33,8 +33,8 @@ namespace Sanssoussi
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
 
-            services.AddRazorPages();               // Classes PageModel
-            services.AddControllersWithViews();     // Structure Model-Vue-Controller
+            services.AddRazorPages();
+            services.AddControllersWithViews();
 
             services.AddHttpsRedirection(options =>
             {
@@ -96,12 +96,12 @@ namespace Sanssoussi
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection(); //Permet de rediriger les requ�tes HTTP vers HTTPS
+            app.UseHttpsRedirection(); //Permet de rediriger les requêtes HTTP vers HTTPS
 
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication(); // Cookie d'authentification pour maintenir la connection
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
