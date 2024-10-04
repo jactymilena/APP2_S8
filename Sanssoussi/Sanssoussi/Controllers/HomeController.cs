@@ -134,37 +134,5 @@ namespace Sanssoussi.Controllers
         {
             return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
         }
-
-        [HttpGet]
-        public IActionResult Emails()
-        {
-            return this.View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Emails(object form)
-        {
-            var searchResults = new List<string>();
-
-            var user = await this._userManager.GetUserAsync(this.User); // Cookie
-            var roles = await this._userManager.GetRolesAsync(user); // Cookie
-            if (roles.Contains("admin"))
-            {
-                var cmd = new SqliteCommand("select Email from AspNetUsers", this._dbConnection);
-                this._dbConnection.Open();
-                var rd = await cmd.ExecuteReaderAsync();
-                while (rd.Read())
-                {
-                    searchResults.Add(rd.GetString(0));
-                }
-
-                rd.Close();
-
-                this._dbConnection.Close();
-            }
-
-            return this.Json(searchResults);
-        }
     }
 }
