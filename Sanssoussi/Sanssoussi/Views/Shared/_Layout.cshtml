@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Sanssoussi.Areas.Identity.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<SanssoussiUser> SignInManager
+@inject UserManager<SanssoussiUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -22,12 +27,14 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Comments">Commentaires</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Search">Recherche</a>
-                    </li>
+                    @if (SignInManager.IsSignedIn(User)) {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Comments">Commentaires</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Search">Recherche</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">À propos</a>
                     </li>
