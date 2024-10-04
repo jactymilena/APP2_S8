@@ -125,14 +125,5 @@ namespace Sanssoussi.Controllers
         {
             return this.View();
         }
-
-        // Affiche une page avec un identifiant unique de la requête qui a échoué
-        // Mauvaise configuration de sécurité?
-        // Est-ce qu'on donne trop d'information?
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
-        }
     }
 }
