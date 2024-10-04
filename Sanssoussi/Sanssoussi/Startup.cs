@@ -7,6 +7,7 @@ using static Microsoft.AspNetCore.Http.StatusCodes;
 using System.Net;
 using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Sanssoussi
 {
@@ -38,17 +39,26 @@ namespace Sanssoussi
                 options.MaxAge = TimeSpan.FromDays(60);
             });
 
-
             services.AddCors();
             
             services.AddAntiforgery(options =>
             {
+                options.Cookie.SameSite = SameSiteMode.Strict; 
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.SameSite = SameSiteMode.Strict; // SameSite = Strict
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 2;
+                options.Lockout.AllowedForNewUsers = true;
             });
         }
 
