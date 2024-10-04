@@ -25,6 +25,17 @@ namespace Sanssoussi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //app.Use(async (context, next) =>
+            //{
+            //    // Supprimer tous les cookies
+            //    foreach (var cookie in context.Request.Cookies.Keys)
+            //    {
+            //        context.Response.Cookies.Delete(cookie);
+            //    }
+
+            //    await next();
+            //});
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
