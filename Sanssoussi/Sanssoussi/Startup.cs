@@ -4,8 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using static Microsoft.AspNetCore.Http.StatusCodes;
-using System.Net;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace Sanssoussi
 {
@@ -21,6 +21,17 @@ namespace Sanssoussi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
             services.AddRazorPages();               // Classes PageModel
             services.AddControllersWithViews();     // Structure Model-Vue-Controller
 
@@ -52,7 +63,7 @@ namespace Sanssoussi
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection(); //Permet de rediriger les requêtes HTTP vers HTTPS
+            app.UseHttpsRedirection(); //Permet de rediriger les requï¿½tes HTTP vers HTTPS
 
             app.UseStaticFiles();
 
